@@ -6,6 +6,10 @@ body {
     align-items: center;
 }
 
+h4 {
+    margin: 0;
+}
+
 .repo-list {
     text-align: center;
     -webkit-transition: all 0.8s ease-in-out;
@@ -155,11 +159,18 @@ body {
 
 .repo-item .badge:hover {
     box-shadow: 0 7px 13px 0 rgba(0,0,0,0.24);
-    font-size: 13.5px;
+    
+    transform: scale(1.1);
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
 }
 
 .repo-item .badge.green {
     background: #690;
+    cursor: pointer;
 }
 .repo-item .badge.orange {
     background: #f4511e;
@@ -194,6 +205,29 @@ body {
 }
 
 .repo-item .link:hover {
-    font-size: 44px;
+    cursor: pointer;
+
+    transform: scale(1.1);
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
 }
 
+.badge.script {
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: normal;
+    border-radius: 3px;
+    position: relative;
+    display: inline-block;
+    margin-top: 10px;
+    margin-right: 5px;
+    font-weight: bold;
+    background: #9c9c9e;
+
+    margin-right: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+}
