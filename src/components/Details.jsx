@@ -10,6 +10,7 @@ import githubUrl from '../utils/githubUrl';
 import findReadme from '../utils/findReadme';
 import findJson from '../utils/findJson';
 
+const exec = require('child_process').exec;
 
 class Details extends React.Component {
 
@@ -28,6 +29,7 @@ class Details extends React.Component {
             showDep: false,
             showGitButton: false,
             dependencies: 0,
+            branch: null,
         };
     }
 
@@ -42,8 +44,36 @@ class Details extends React.Component {
             showDep: false,
             showGitButton: false,
             dependencies: 0,
+            branch: null,
         });
         this.fetchData();
+    }
+
+
+    showDep= () => {
+        if (this.state.jsonData && !this.state.showDep) {
+            this.setState({
+                showDep: true,
+            });
+        } else {
+            this.setState({
+                showDep: false,
+            });
+        }
+    }
+
+    getGitBranch= () => {
+        exec(`cd "${this.props.path}" && git branch | grep \\* | cut -d ' ' -f2-`, (error, stdout, stderr) => {
+            if (error) {
+                console.log('error', error);
+            } else {
+                const branch = stdout.replace('\n', '');
+                console.log('branch', `"${branch}"`);
+                this.setState({
+                    branch,
+                });
+            }
+        });
     }
 
     showJson= () => {
@@ -57,17 +87,15 @@ class Details extends React.Component {
             });
         }
     }
-
-    showDep= () => {
-        if (this.state.jsonData && !this.state.showDep) {
-            this.setState({
-                showDep: true,
-            });
-        } else {
-            this.setState({
-                showDep: false,
-            });
-        }
+    openDir= () => {
+        console.log('open dir', this.props.path);
+        exec(`cd "${this.props.path}" && open .`, (error, stdout, stderr) => {
+            if (error) {
+                console.log('error', error);
+            } else {
+                console.log(stdout);
+            }
+        });
     }
 
     countDependencies= () => {
@@ -98,6 +126,8 @@ class Details extends React.Component {
                             jsonData,
                         });
                         this.countDependencies();
+                        this.getGitBranch();
+                        console.log('branch', this.state.branch);
                     });
                 });
             });
@@ -116,8 +146,14 @@ class Details extends React.Component {
         console.log('has readme?', this.state.hasReadme);
         return (
           <div className={`repo-item ${this.state.badge.issueStatus}`} >
-            <div>
-              <a className="header" href={this.state.badge.homeLink}>{ this.props.name}</a>
+            <div className={'header-container'}>
+              {this.state.badge.homeLink !== 'https://github.com/404' ?
+                <a className="header" href={this.state.badge.homeLink}>{ this.props.name}
+                </a>
+              : <a className="header" onClick={this.openDir}>{ this.props.name}</a>}
+              <a className="dirLink" title="Open directory" onClick={this.openDir}> <i className="fa fa-folder-o fa-lg" aria-hidden="true" /></a>
+              {this.state.badge.homeLink !== 'https://github.com/404' &&
+              <a className="homeLink" title="Open homepage" href={this.state.badge.homeLink}> <i className="fa fa-external-link fa-lg" aria-hidden="true" /></a> }
             </div>
             <div className="badge-container">
               <Badge
@@ -162,6 +198,10 @@ class Details extends React.Component {
                 text={`Dependencies: ${this.state.dependencies}`}
                 click={this.showDep}
               />
+              {this.state.branch && <Badge
+                class={this.state.branch === 'master' ? 'green' : 'red'}
+                text={`Branch: ${this.state.branch}`}
+              /> }
             </div>
             {this.renderGitButton(this.state.url) &&
             <GitButton

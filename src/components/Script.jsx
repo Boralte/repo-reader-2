@@ -13,8 +13,7 @@ class Script extends React.Component {
     }
 
     runScript= (script, path) => {
-        console.log('state', this.state.script);
-        exec(`cd ${path} && npm run ${script}`, (error, stdout, stderr) => {
+        exec(`cd ${path} && npm ${script !== 'install' ? 'run' : ''} ${script}`, (error, stdout, stderr) => {
             if (error) {
                 console.error(path, `exec error: ${error}`);
             } else {
@@ -26,24 +25,33 @@ class Script extends React.Component {
         });
     }
 
+    installScript = {
+        install: 'npm i',
+    }
+
     render() {
+        const scripts = { ...this.installScript, ...this.props.scripts };
+        console.log('scripts', scripts);
         return (
           <div>
             <h4>{this.props.show && 'Scripts:'}</h4>
-            <div>{this.props.show && Object.keys(
-                    this.props.scripts).map(
-                        script => (<Badge
-                          class={this.state.script ? 'green' : 'script'}
-                          text={script}
-                          icon={this.state.script ? 'circle-o-notch fa-spin fa-fw' : 'code'}
-                          click={() => {
-                              this.setState({
-                                  script,
-                              }, () => this.runScript(script, this.props.path));
-                          }}
-
-                        />
-                        ))}
+            <div>
+              {this.props.show && Object.keys(
+                    scripts).map(
+                        (script) => {
+                            console.log(script);
+                            return (<Badge
+                              class={this.state.script === script ? 'green' : 'script'}
+                              text={script}
+                              icon={this.state.script === script ? 'circle-o-notch fa-spin fa-fw' : 'code'}
+                              click={() => {
+                                  this.setState({
+                                      script,
+                                  }, () => this.runScript(script, this.props.path));
+                              }}
+                            />);
+                        })
+                }
             </div>
           </div>
         );

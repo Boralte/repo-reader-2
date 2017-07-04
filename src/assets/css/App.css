@@ -10,6 +10,41 @@ h4 {
     margin: 0;
 }
 
+a {
+    cursor: pointer;
+}
+
+.header-container .dirLink p{
+    display: none;
+}
+
+
+.header-container p {
+    display: block;
+    font-size: 14px;
+    margin: 2px;
+    margin-left: 10px;
+}
+
+
+.header-container .dirLink:hover p{
+    display: inline-block;
+    font-size: 14px;
+    margin: 0;
+    margin-left: 5px;
+}
+
+.header-container .homeLink p{
+    display: none;
+}
+
+.header-container .homeLink:hover p{
+    display: inline-block;
+    font-size: 14px;
+    margin: 0;
+    margin-left: 5px;
+}
+
 .repo-list {
     text-align: center;
     -webkit-transition: all 0.8s ease-in-out;
@@ -82,9 +117,9 @@ h4 {
     font-family: sans-serif;
     padding: 15px 20px;
     position: relative;
-    width: 20%;
+    width: 80%;
     min-width: 300px;
-    max-width: 600px;
+    max-width: 500px;
     text-align: left;
 
     -webkit-transition: all 0.8s ease-in-out;
@@ -226,12 +261,11 @@ h4 {
     border-radius: 3px;
     position: relative;
     display: inline-block;
-    margin-top: 10px;
+    margin-top: 5px;
     margin-right: 5px;
+    margin-bottom: 5px; 
     font-weight: bold;
     background: #9c9c9e;
 
-    margin-right: 5px;
-    margin-top: 5px;
     cursor: pointer;
 }

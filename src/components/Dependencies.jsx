@@ -19,7 +19,7 @@ class Dependencies extends React.Component {
                    Object.keys(
                             this.props.devDeps).map(
                                 devDep => <li>{devDep} - {this.props.devDeps[devDep]}</li>,
-                                )}
+                            )}
               </ul>
             </div>
             }
