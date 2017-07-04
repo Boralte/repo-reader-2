@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Badge from './Badge.jsx';
 import GitButton from './GitButton.jsx';
 import Script from './Script.jsx';
+import Dependencies from './Dependencies.jsx';
 import ProcessData from '../utils/processData';
 import fetchGithub from '../utils/fetchGithub';
 import githubUrl from '../utils/githubUrl';
@@ -24,7 +25,9 @@ class Details extends React.Component {
             jsonData: null,
             url: null,
             showJson: false,
+            showDep: false,
             showGitButton: false,
+            dependencies: 0,
         };
     }
 
@@ -36,7 +39,9 @@ class Details extends React.Component {
             jsonData: null,
             url: null,
             showJson: false,
+            showDep: false,
             showGitButton: false,
+            dependencies: 0,
         });
         this.fetchData();
     }
@@ -51,6 +56,27 @@ class Details extends React.Component {
                 showJson: false,
             });
         }
+    }
+
+    showDep= () => {
+        if (this.state.jsonData && !this.state.showDep) {
+            this.setState({
+                showDep: true,
+            });
+        } else {
+            this.setState({
+                showDep: false,
+            });
+        }
+    }
+
+    countDependencies= () => {
+        let depCount = this.state.jsonData ? Object.keys(this.state.jsonData.dependencies).length : 0;
+        depCount = this.state.jsonData ? depCount + Object.keys(this.state.jsonData.devDependencies).length : depCount + 0;
+
+        this.setState({
+            dependencies: depCount,
+        });
     }
 
     fetchData= () => {
@@ -71,6 +97,7 @@ class Details extends React.Component {
                             hasReadme,
                             jsonData,
                         });
+                        this.countDependencies();
                     });
                 });
             });
@@ -92,7 +119,7 @@ class Details extends React.Component {
             <div>
               <a className="header" href={this.state.badge.homeLink}>{ this.props.name}</a>
             </div>
-            <div className="badgeContainer">
+            <div className="badge-container">
               <Badge
                 class={this.state.hasReadme ? 'green' : 'red'}
                 url={this.state.data.html_url && `${this.state.data.html_url}/blob/master/README.md`}
@@ -130,6 +157,11 @@ class Details extends React.Component {
                 class={'size'}
                 text={`${this.state.badge.size}`}
               />
+              <Badge
+                class={'dependencies'}
+                text={`Dependencies: ${this.state.dependencies}`}
+                click={this.showDep}
+              />
             </div>
             {this.renderGitButton(this.state.url) &&
             <GitButton
@@ -137,11 +169,17 @@ class Details extends React.Component {
             />
             }
             <p>{this.state.badge.description}</p>
-            <Script
-              show={this.state.showJson}
-              scripts={this.state.jsonData && this.state.jsonData.scripts}
-              path={this.props.path}
-            />
+            <div className={'script-container'}>
+              <Script
+                show={this.state.showJson}
+                scripts={this.state.jsonData && this.state.jsonData.scripts}
+                path={this.props.path}
+              />
+            </div>
+            {this.state.showDep && <Dependencies
+              deps={this.state.jsonData && this.state.jsonData.dependencies}
+              devDeps={this.state.jsonData && this.state.jsonData.devDependencies}
+            />}
           </div>
         );
     }

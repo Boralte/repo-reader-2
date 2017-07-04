@@ -18,6 +18,9 @@ h4 {
     -ms-transition: all 0.8s ease-in-out;
     transition: all 0.8s ease-in-out;
     transition-duration: all 0.8s ease-in-out;
+
+    display: flex;
+    flex-flow: row wrap;
 }
 
 .title {
@@ -72,10 +75,8 @@ h4 {
 
 
 .repo-item {
-    display: inline-table;
     list-style: none;
     margin: 20px;
-    align-self: center;
     background: rgba(255, 255, 255, 0.05);
     color: #e5e8e8;
     font-family: sans-serif;
@@ -108,10 +109,13 @@ h4 {
 
 
 
-.repo-item .badgeContainer {
+.repo-item .badge-container {
     margin-right: 23px;
 }
-
+.repo-item .script-container {
+    display: absolute;
+    left: 0;
+}
 .repo-item.red {
     border-left: 10px solid #bf200f;
 }

@@ -5,15 +5,24 @@ const exec = require('child_process').exec;
 
 class Script extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            script: null,
+        };
+    }
+
     runScript= (script, path) => {
-        console.log(script);
+        console.log('state', this.state.script);
         exec(`cd ${path} && npm run ${script}`, (error, stdout, stderr) => {
             if (error) {
                 console.error(path, `exec error: ${error}`);
-                callback(new Error('Not a directory'), false);
             } else {
-                callback(null, true);
+                console.log(stdout);
             }
+            this.setState({
+                script: null,
+            });
         });
     }
 
@@ -24,12 +33,15 @@ class Script extends React.Component {
             <div>{this.props.show && Object.keys(
                     this.props.scripts).map(
                         script => (<Badge
-                          class={'script'}
+                          class={this.state.script ? 'green' : 'script'}
                           text={script}
-                          icon={'code'}
+                          icon={this.state.script ? 'circle-o-notch fa-spin fa-fw' : 'code'}
                           click={() => {
-                              this.runScript(script, this.props.path);
+                              this.setState({
+                                  script,
+                              }, () => this.runScript(script, this.props.path));
                           }}
+
                         />
                         ))}
             </div>
